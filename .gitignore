@@ -1,0 +1,16 @@
+node_modules/
+.next/
+dist/
+build/
+
+backend/.env
+frontend/.env
+
+cookies.txt
+doc_cookies.txt
+
+*.log
+
+.DS_Store
+.env
+backend/reports/

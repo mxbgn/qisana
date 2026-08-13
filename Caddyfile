@@ -1,0 +1,10 @@
+pro.secours-infirmiers.fr {
+    @api path /auth* /users* /searches* /audit-logs* /cpts* /mail*
+    handle @api {
+        reverse_proxy backend:3000
+    }
+
+    handle {
+        reverse_proxy frontend:3001
+    }
+}

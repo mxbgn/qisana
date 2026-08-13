@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Palette */
+  --color-brand-navy: #020265;
+  --color-brand-ice: #dcedf8;
+  --color-brand-coral: #f67373;
+  --color-brand-red: #bb2929;
+
+  /* Semantic / Surface Colors (Replacing hardcoded slate/emerald/rose) */
+  --color-surface-base: #f8fafc; 
+  --color-surface-muted: #64748b;
+  --color-surface-dark: #0f172a;
+ 
+  --color-success-bg: #ecfdf5;
+  --color-success-main: #059669;
+  --color-success-hover: #047857;
+
+  --color-error-bg: #fff1f2;
+  --color-error-main: #e11d48;
+}
+
+@layer base {
+  body {
+    @apply bg-surface-base text-brand-navy antialiased;
+  }
+}
+
+@layer components {
+  .qisana-card {
+    @apply bg-white border border-brand-ice rounded-2xl shadow-sm overflow-hidden;
+  }
+
+  .qisana-input {
+    @apply h-11 bg-white border border-brand-ice rounded-xl px-4 text-sm font-medium transition-all focus:border-brand-navy focus:ring-0 outline-none placeholder:text-surface-muted text-brand-navy;
+  }
+
+  .qisana-btn {
+    @apply h-11 bg-brand-navy text-white font-bold rounded-xl px-6 transition-all hover:opacity-90 focus:outline-none focus:ring-0 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center;
+  }
+
+  .qisana-pill {
+    @apply inline-flex items-center px-3 py-1 rounded-full border border-brand-ice bg-brand-ice/40 text-brand-navy text-xs font-bold;
+  }
+
+  .label-title {
+    @apply font-bold uppercase tracking-widest text-brand-navy/60 text-[10px];
+  }
+
+  .qisana-input-error {
+    @apply border-brand-red bg-brand-coral/10 text-brand-red;
+  }
+
+  .qisana-btn-success {
+    @apply bg-success-main border-success-main hover:bg-success-hover text-white;
+  }
+}

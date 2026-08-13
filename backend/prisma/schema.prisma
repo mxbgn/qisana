@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  COORDINATOR
+  HEALTH_PRO
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Specialty {
+  DOCTEUR
+  INFIRMIER
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  password         String
+  role             Role      // ADMIN, HEALTH_PRO, COORDINATOR
+  isEmailVerified  Boolean   @default(false)
+  verificationToken String?  @unique
+  deletedAt        DateTime?
+  profile          Profile?
+  createdAt        DateTime  @default(now())
+  auditLogs         AuditLog[] @relation("AdminActions")
+  searchSnapshots   SearchSnapshot[]
+}
+
+model CPTS {
+  id         Int    @id @default(autoincrement())
+  name       String
+  value      String @unique
+  region     String
+  department String
+  profiles   Profile[]
+}
+
+model Profile {
+  id                  Int            @id @default(autoincrement())
+  userId              Int            @unique
+  user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isValidated         Boolean        @default(false)
+  gender              Gender?
+  firstName           String?
+  lastName            String?
+  adeli               String?
+  rpps                String?
+  cptsId              Int?
+  cpts                CPTS?          @relation(fields: [cptsId], references: [id])
+  specialty           Specialty?
+  hasFormationDeces   Boolean        @default(false)
+  hasTeleconsultation Boolean        @default(false)
+  phone               String?
+  address             String?
+  lat                 Float?
+  lng                 Float?
+  radius              Int            @default(30)
+  availabilities      Availability[]
+}
+
+model SearchSnapshot {
+  searchId       String   @id
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title          String
+  address        String
+  searchDate     String
+  coords         Json
+  filters        Json
+  results        Json
+  selectedProId  Int?
+  confirmedProId Int?
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Availability {
+  id        Int      @id @default(autoincrement())
+  profileId Int
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  startTime DateTime
+  endTime   DateTime
+
+  @@index([date])
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  action     String
+  entityType String
+  entityId   Int
+  details    Json?
+  createdAt  DateTime @default(now())
+  adminId    Int
+  admin      User     @relation("AdminActions", fields: [adminId], references: [id], onDelete: Cascade)
+}
