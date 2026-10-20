@@ -121,8 +121,8 @@ export default function ScheduleManager({ shifts = [], setShifts }: { shifts: an
       setNewShift({ startH: '', startM: '', endH: '', endM: '' });
       setShowStartPicker(false);
       setShowEndPicker(false);
-    } catch (err) { 
-      triggerShiftError("Erreur lors de l'enregistrement."); 
+    } catch (err: any) { 
+      triggerShiftError(err.response?.data?.message || "Erreur lors de l'enregistrement."); 
     } finally {
       setIsSubmitting(false);
     }
@@ -156,8 +156,9 @@ export default function ScheduleManager({ shifts = [], setShifts }: { shifts: an
       await api.post('/users/availability', { shifts: updatedShifts });
       const res = await api.get('/users/availability/me');
       setShifts(res.data || []);
-    } catch (err) {
+    } catch (err: any) {
       setShifts(previousShifts);
+      triggerShiftError(err.response?.data?.message || "Erreur lors de la suppression.");
     }
   };
 
@@ -337,7 +338,9 @@ export default function ScheduleManager({ shifts = [], setShifts }: { shifts: an
                 )}
               </div>
             </div>
-            <button onClick={addShift} ref={refs.submit} disabled={isSubmitting} className={`qisana-btn w-full shadow-sm transition-all duration-300 ${isShiftError ? 'animate-shake qisana-btn-error' : ''} ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>Ajouter</button>
+            <button onClick={addShift} ref={refs.submit} disabled={isSubmitting} className={`qisana-btn w-full shadow-sm transition-all duration-300 ${isShiftError ? 'animate-shake qisana-btn-error' : ''} ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              {isSubmitting ? 'Envoi...' : 'Ajouter'}
+            </button>
           </div>
         </div>
       )}

@@ -25,6 +25,7 @@ export default function ProfilePage() {
   });
   const [shifts, setShifts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,8 +53,9 @@ export default function ProfilePage() {
           isValidated: p?.isValidated || false
         });
         setShifts(availRes.data || []);
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
+        setPageError('Impossible de charger vos données. Veuillez rafraîchir la page.');
       } finally {
         setLoading(false);
       }
@@ -62,6 +64,20 @@ export default function ProfilePage() {
   }, []);
 
   if (loading) return <div className="p-12 text-center label-title text-surface-muted animate-pulse">Chargement de votre espace...</div>;
+
+  if (pageError) return (
+    <div className="p-12 text-center font-sans">
+      <div className="max-w-md mx-auto bg-error-bg text-error-main p-6 rounded-xl border border-error-main/20">
+        <p className="font-bold text-sm mb-4">{pageError}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="qisana-btn h-10 px-4 text-xs font-bold"
+        >
+          Recharger la page
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-surface-base p-8 font-sans">

@@ -145,9 +145,10 @@ export default function DispatchPage() {
 
       setResults(filteredResults);
       if (filteredResults.length === 0) setError("no_results");
-    } catch (err) {
+    } catch (err: any) {
       console.error('Search failed:', err);
-      setError("no_results");
+      const errorMsg = err.response?.data?.message || "Une erreur est survenue lors de la recherche.";
+      setError(errorMsg);
       setResults([]);
       setLoading(false);
       return;

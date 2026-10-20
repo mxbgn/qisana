@@ -7,7 +7,6 @@ export default function SettingsMenu({ profile, setProfile }: { profile: any, se
   const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   
-  // Password change states
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -16,18 +15,26 @@ export default function SettingsMenu({ profile, setProfile }: { profile: any, se
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [isSubmittingPassword, setIsSubmittingPassword] = useState(false);
 
+  const [isSubmittingUnlock, setIsSubmittingUnlock] = useState(false);
+  const [unlockError, setUnlockError] = useState<string | null>(null);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/login';
   };
 
   const handleUnlock = async () => {
+    setIsSubmittingUnlock(true);
+    setUnlockError(null);
     try {
       await api.patch('/users/profile/unlock');
       setProfile((prev: any) => ({ ...prev, isValidated: false }));
       setShowModal(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setUnlockError(err.response?.data?.message || 'Une erreur est survenue lors du déverrouillage.');
+    } finally {
+      setIsSubmittingUnlock(false);
     }
   };
 
@@ -124,7 +131,6 @@ export default function SettingsMenu({ profile, setProfile }: { profile: any, se
         </div>
       </div>
 
-      {/* Profile Field Unlock Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand-navy/40 backdrop-blur-xs p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-brand-ice/50">
@@ -132,25 +138,36 @@ export default function SettingsMenu({ profile, setProfile }: { profile: any, se
             <p className="text-sm text-surface-muted mt-2">
               Le déverrouillage de vos informations professionnelles basculera votre profil en statut « En attente de validation ». Souhaitez-vous continuer ?
             </p>
+
+            {unlockError && (
+              <p className="text-xs font-semibold text-error-main bg-error-bg p-2.5 rounded-lg border border-error-main/20 mt-4">
+                {unlockError}
+              </p>
+            )}
+
             <div className="flex justify-end gap-3 mt-6">
               <button 
-                onClick={() => setShowModal(false)} 
-                className="h-10 px-4 rounded-lg border border-surface-border text-sm font-medium text-surface-muted hover:bg-surface-subtle transition-colors cursor-pointer"
+                disabled={isSubmittingUnlock}
+                onClick={() => {
+                  setShowModal(false);
+                  setUnlockError(null);
+                }} 
+                className="h-10 px-4 rounded-lg border border-surface-border text-sm font-medium text-surface-muted hover:bg-surface-subtle transition-colors disabled:opacity-50 cursor-pointer"
               >
                 Annuler
               </button>
               <button 
+                disabled={isSubmittingUnlock}
                 onClick={handleUnlock} 
-                className="qisana-btn h-10 px-4 font-bold cursor-pointer"
+                className="qisana-btn h-10 px-4 font-bold disabled:opacity-50 cursor-pointer"
               >
-                Confirmer
+                {isSubmittingUnlock ? 'Chargement...' : 'Confirmer'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Change Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand-navy/40 backdrop-blur-xs p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl border border-brand-ice/50">

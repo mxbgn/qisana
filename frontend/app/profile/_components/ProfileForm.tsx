@@ -1,11 +1,11 @@
-'use client';
-
 import { useState, useEffect, useRef } from 'react';
 import api from '@/lib/api';
 
 export default function ProfileForm({ profile, setProfile }: { profile: any, setProfile: any }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [generalError, setGeneralError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaveSuccess, setIsSaveSuccess] = useState(false);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [occitanieData, setOccitanieData] = useState<Record<string, any[]>>({});
@@ -19,6 +19,7 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
 
   const clearError = (key: string) => {
     if (errors[key]) setErrors(prev => ({ ...prev, [key]: false }));
+    if (generalError) setGeneralError(null);
   };
 
   const scrollToError = (key: string) => {
@@ -46,6 +47,8 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    setGeneralError(null);
+    
     const newErrors: Record<string, boolean> = {};
     const nameRegex = /^[a-zA-ZÀ-ÿ\s'-]+$/;
     
@@ -66,6 +69,7 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const parsedCptsId = (profile.cptsId === 'none' || profile.cptsId === 'other') 
         ? null 
@@ -84,7 +88,11 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
       if (err.response?.status === 400) {
         setErrors(prev => ({ ...prev, address: true }));
         scrollToError('address');
+      } else {
+        setGeneralError(err.response?.data?.message || 'Une erreur est survenue lors de la sauvegarde.');
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -113,7 +121,7 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
   };
 
   const inputClass = (hasError: boolean) => `
-    w-full qisana-input 
+    w-full qisana-input placeholder:text-slate-400 
     ${hasError ? 'qisana-input-error' : ''} 
     ${profile.isValidated ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed select-none focus:bg-slate-100 focus:border-slate-200' : 'bg-slate-50'}
   `.trim();
@@ -300,8 +308,18 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
               </div>
             </div>
 
-            <button type="submit" className={`w-full qisana-btn shadow-sm transition-all duration-300 ${isSaveSuccess ? 'animate-success qisana-btn-success' : ''}`}>
-              {isSaveSuccess ? 'Profil mis à jour' : 'Sauvegarder les modifications'}
+            {generalError && (
+              <p className="text-xs font-semibold text-error-main bg-error-bg p-2.5 rounded-lg border border-error-main/20">
+                {generalError}
+              </p>
+            )}
+
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className={`w-full qisana-btn shadow-sm transition-all duration-300 disabled:opacity-50 ${isSaveSuccess ? 'animate-success qisana-btn-success' : ''}`}
+            >
+              {isSubmitting ? 'Sauvegarde...' : isSaveSuccess ? 'Profil mis à jour' : 'Sauvegarder les modifications'}
             </button>
           </form>
         </div>
