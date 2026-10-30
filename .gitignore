@@ -3,8 +3,8 @@ node_modules/
 dist/
 build/
 
+.env
 backend/.env
-frontend/.env
 
 cookies.txt
 doc_cookies.txt
@@ -12,5 +12,4 @@ doc_cookies.txt
 *.log
 
 .DS_Store
-.env
 backend/reports/

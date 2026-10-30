@@ -60,11 +60,10 @@ services:
     build:
       context: ./frontend
       args:
-        NEXT_PUBLIC_API_URL: https://pro.secours-infirmiers.fr
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_CARTO_API_KEY: ${NEXT_PUBLIC_CARTO_API_KEY}
     init: true
     restart: always
-    env_file:
-      - ./frontend/.env
     depends_on:
       - backend
 

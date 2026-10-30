@@ -62,8 +62,8 @@ export default function SidebarList({
             {[1, 2, 3].map(i => <div key={i} className="h-24 bg-white rounded-xl border border-brand-ice" />)}
           </div>
         ) : (results.length === 0 || error) ? (
-          <div className="w-full flex-1 flex flex-col items-center justify-center text-center py-8 lg:py-0 px-6 text-surface-muted italic">
-            <p className="text-sm font-medium">
+          <div className="w-full flex-1 flex flex-col items-center justify-center text-center py-8 lg:py-0 px-6">
+            <p className="text-sm font-bold text-slate-400">
               {error === "no_results" ? "Aucun professionnel disponible pour cette recherche" : "En attente de recherche"}
             </p>
           </div>

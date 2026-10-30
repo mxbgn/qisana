@@ -98,8 +98,8 @@ export default function MapView({ results, centerCoords, searchMarkerCoords, sel
     <main className="w-full aspect-square shrink-0 lg:w-auto lg:aspect-auto lg:h-auto lg:flex-1 lg:shrink min-w-0 relative z-0 qisana-card">
       <MapContainer center={[48.8566, 2.3522]} zoom={12} zoomControl={false} style={{ height: '100%', width: '100%' }}>
         <TileLayer 
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}" 
-          attribution='&copy; Esri &mdash; Esri, DeLorme, NAVTEQ' 
+          url={`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_API_KEY}`} 
+          attribution='&copy; CARTO &mdash; &copy; OpenStreetMap contributors' 
         />
         <MapController />
 

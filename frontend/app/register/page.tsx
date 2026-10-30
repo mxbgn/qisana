@@ -76,8 +76,8 @@ export default function RegisterPage() {
         {success ? (
           <div className="space-y-4 animate-in fade-in">
             <div className="bg-success-bg border border-success-main/20 text-success-main p-5 text-sm rounded-xl font-medium space-y-2">
-              <p className="font-bold text-success-main">Compte créé avec succès !</p>
-              <p>Un e-mail de confirmation vient de vous être envoyé. Veuillez vérifier votre boîte de réception pour valider votre inscription.</p>
+              <p className="font-bold text-success-main">E-mail de validation envoyé !</p>
+              <p>Veuillez vérifier votre boîte de réception pour valider votre adresse e-mail avant de vous connecter.</p>
             </div>
             <p className="text-xs text-center text-surface-muted italic">Redirection vers la page de connexion...</p>
           </div>
