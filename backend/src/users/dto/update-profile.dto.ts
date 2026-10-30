@@ -39,6 +39,14 @@ export class UpdateProfileDto {
   @IsOptional()
   hasTeleconsultation?: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  hasPrado?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  hasPdsa?: boolean;
+
   @IsString()
   @IsOptional()
   address?: string;

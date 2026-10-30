@@ -27,12 +27,17 @@ export interface Professional {
     gender?: string;
     hasFormationDeces: boolean;
     hasTeleconsultation: boolean;
+    hasPrado: boolean;
+    hasPdsa: boolean;
   };
 }
 
 export interface SearchFilters {
   specialty: 'DOCTOR' | 'NURSE' | null;
   hasFormationDeces: boolean;
+  hasTeleconsultation: boolean;
+  hasPrado: boolean;
+  hasPdsa: boolean;
 }
 
 export default function DispatchPage() {
@@ -123,7 +128,10 @@ export default function DispatchPage() {
           radius: 100,
           date: dateStr,
           specialty: filters.specialty,
-          hasFormationDeces: filters.hasFormationDeces
+          hasFormationDeces: filters.hasFormationDeces,
+          hasTeleconsultation: filters.hasTeleconsultation,
+          hasPrado: filters.hasPrado,
+          hasPdsa: filters.hasPdsa
         }
       });
       
@@ -133,13 +141,10 @@ export default function DispatchPage() {
         const isNurse = pro.profile?.specialty?.toUpperCase() === 'INFIRMIER';
         if (filters.specialty === 'NURSE' && !isNurse) return false;
         if (filters.specialty === 'DOCTOR' && isNurse) return false;
-
-        if (filters.hasFormationDeces) {
-          if (!pro.profile?.hasFormationDeces) return false;
-        } else {
-          if (!pro.profile?.hasTeleconsultation) return false;
-        }
-
+        if (filters.hasFormationDeces && !pro.profile?.hasFormationDeces) return false;
+        if (filters.hasTeleconsultation && !pro.profile?.hasTeleconsultation) return false;
+        if (filters.hasPrado && !pro.profile?.hasPrado) return false;
+        if (filters.hasPdsa && !pro.profile?.hasPdsa) return false;
         return true;
       });
 
@@ -227,7 +232,7 @@ export default function DispatchPage() {
           <CoordinatorSettings />
         </div>
 
-        <SearchBar 
+       <SearchBar 
           key={activeTabId ?? 'new'}
           onSearch={handleSearch} 
           onLocationSelect={() => {}} 
@@ -236,10 +241,13 @@ export default function DispatchPage() {
             address: activeTab.address,
             coords: { lat: activeTab.coords.lat, lng: activeTab.coords.lng },
             dateStr: activeTab.searchDate,
-            filters: activeTab.filters
+            filters: activeTab.filters,
+            hasTeleconsultation: activeTab.filters.hasTeleconsultation,
+            hasPrado: activeTab.filters.hasPrado,
+            hasPdsa: activeTab.filters.hasPdsa
           } : null}
         />
-        
+
         <div className="flex flex-col lg:flex-row w-full flex-1 gap-4 lg:min-h-0 min-w-0">
           <SidebarList 
             results={results}

@@ -59,7 +59,9 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
     if (!profile.adeli || profile.adeli.length !== 9) newErrors.adeli = true;
     if (!profile.rpps || profile.rpps.length !== 11) newErrors.rpps = true;
     if (!profile.specialty) newErrors.specialty = true;
-    if (!profile.hasFormationDeces && !profile.hasTeleconsultation) newErrors.qualifications = true;
+    if (!profile.hasFormationDeces && !profile.hasTeleconsultation && !profile.hasPrado && !profile.hasPdsa) {
+      newErrors.qualifications = true;
+    }
     if (!profile.address) newErrors.address = true;
 
     if (Object.keys(newErrors).length > 0) {
@@ -267,6 +269,40 @@ export default function ProfileForm({ profile, setProfile }: { profile: any, set
                   }`}
                 >
                   Téléconsultation
+                </button>
+                <button 
+                  disabled={profile.isValidated}
+                  type="button" 
+                  onClick={() => {
+                    setProfile({ ...profile, hasPrado: !profile.hasPrado });
+                    clearError('qualifications');
+                  }} 
+                  className={`h-10 px-4 rounded-full text-xs font-bold border transition-all ${
+                    profile.isValidated 
+                      ? profile.hasPrado ? 'bg-slate-200 text-slate-500 border-slate-300 cursor-not-allowed' : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                      : profile.hasPrado 
+                        ? 'bg-brand-navy text-white border-brand-navy shadow-sm' 
+                        : 'bg-white text-surface-muted border-brand-ice hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'
+                  }`}
+                >
+                  PRADO
+                </button>
+                <button 
+                  disabled={profile.isValidated}
+                  type="button" 
+                  onClick={() => {
+                    setProfile({ ...profile, hasPdsa: !profile.hasPdsa });
+                    clearError('qualifications');
+                  }} 
+                  className={`h-10 px-4 rounded-full text-xs font-bold border transition-all ${
+                    profile.isValidated 
+                      ? profile.hasPdsa ? 'bg-slate-200 text-slate-500 border-slate-300 cursor-not-allowed' : 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                      : profile.hasPdsa 
+                        ? 'bg-brand-navy text-white border-brand-navy shadow-sm' 
+                        : 'bg-white text-surface-muted border-brand-ice hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'
+                  }`}
+                >
+                  PDSA
                 </button>
               </div>
             </div>

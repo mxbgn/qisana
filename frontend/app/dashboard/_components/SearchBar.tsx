@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 
 export interface SearchFilters {
-  specialty: 'DOCTOR' | null;
+  specialty: 'DOCTOR' | 'NURSE' | null;
   hasFormationDeces: boolean;
+  hasTeleconsultation: boolean;
+  hasPrado: boolean;
+  hasPdsa: boolean;
 }
 
 export interface SearchBarInitialValues {
@@ -10,6 +13,9 @@ export interface SearchBarInitialValues {
   coords: { lat: number; lng: number };
   dateStr: string;
   filters: SearchFilters;
+  hasTeleconsultation: boolean;
+  hasPrado: boolean;
+  hasPdsa: boolean;
 }
 
 interface SearchBarProps {
@@ -52,8 +58,11 @@ export default function SearchBar({ onSearch, onLocationSelect, loading, initial
   );
   const [isError, setIsError] = useState(false);
 
-  const [specialty, setSpecialty] = useState<'DOCTOR' | null>(initialValues?.filters?.specialty ?? null);
+  const [specialty, setSpecialty] = useState<'DOCTOR' | 'NURSE' | null>(initialValues?.filters?.specialty ?? null);
   const [hasFormationDeces, setHasFormationDeces] = useState(initialValues?.filters?.hasFormationDeces ?? false);
+  const [hasTeleconsultation, setHasTeleconsultation] = useState(initialValues?.filters?.hasTeleconsultation ?? false);
+  const [hasPrado, setHasPrado] = useState(initialValues?.filters?.hasPrado ?? false);
+  const [hasPdsa, setHasPdsa] = useState(initialValues?.filters?.hasPdsa ?? false);
 
   const [calendarFocusDate, setCalendarFocusDate] = useState<Date | null>(null);
   const [activeTimeIndex, setActiveTimeIndex] = useState(-1);
@@ -232,12 +241,12 @@ export default function SearchBar({ onSearch, onLocationSelect, loading, initial
     if (val.length === max && !isDel && nextRef?.current) nextRef.current.focus();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCoords || !dt.day || !dt.month || !dt.year || !dt.hour || !dt.minute) return setIsError(true);
     const pad = (v: string) => v.padStart(2, '0');
     const dateStr = `${dt.year}-${pad(dt.month)}-${pad(dt.day)}T${pad(dt.hour)}:${pad(dt.minute)}:00Z`;
-    onSearch(selectedCoords, dateStr, query, { specialty, hasFormationDeces });
+    onSearch(selectedCoords, dateStr, query, { specialty, hasFormationDeces, hasTeleconsultation, hasPrado, hasPdsa });
   };
 
   const renderCustomCalendar = () => {
@@ -274,7 +283,7 @@ export default function SearchBar({ onSearch, onLocationSelect, loading, initial
     );
   };
 
-  const activeFiltersCount = (specialty ? 1 : 0) + (hasFormationDeces ? 1 : 0);
+  const activeFiltersCount = (specialty ? 1 : 0) + (hasFormationDeces ? 1 : 0) + (hasTeleconsultation ? 1 : 0) + (hasPrado ? 1 : 0) + (hasPdsa ? 1 : 0);
 
   return (
     <header className="qisana-card p-3 flex flex-col relative z-40 w-full !overflow-visible font-sans">
@@ -365,6 +374,9 @@ export default function SearchBar({ onSearch, onLocationSelect, loading, initial
               <div className="absolute top-[120%] right-0 max-w-[calc(100vw-2rem)] qisana-card shadow-xl z-[1100] p-2 bg-white border border-brand-ice/60 flex flex-row items-center gap-1.5 overflow-x-auto scrollbar-hide">
                 <button type="button" tabIndex={-1} onMouseEnter={() => setActiveFilterIndex(0)} onClick={() => setSpecialty(prev => prev === 'DOCTOR' ? null : 'DOCTOR')} className={`shrink-0 px-2.5 py-1 text-xs font-bold rounded-full border border-brand-ice transition-all whitespace-nowrap ${specialty === 'DOCTOR' ? 'bg-brand-navy text-white border-transparent shadow-sm' : activeFilterIndex === 0 ? 'bg-brand-ice/40 text-brand-navy' : 'bg-white text-surface-muted hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'}`}>Docteur</button>
                 <button type="button" tabIndex={-1} onMouseEnter={() => setActiveFilterIndex(1)} onClick={() => setHasFormationDeces(!hasFormationDeces)} className={`shrink-0 px-2.5 py-1 text-xs font-bold rounded-full border border-brand-ice transition-all whitespace-nowrap ${hasFormationDeces ? 'bg-brand-navy text-white border-transparent shadow-sm' : activeFilterIndex === 1 ? 'bg-brand-ice/40 text-brand-navy' : 'bg-white text-surface-muted hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'}`}>Certificat décès</button>
+                <button type="button" tabIndex={-1} onClick={() => setHasTeleconsultation(!hasTeleconsultation)} className={`shrink-0 px-2.5 py-1 text-xs font-bold rounded-full border border-brand-ice transition-all whitespace-nowrap ${hasTeleconsultation ? 'bg-brand-navy text-white border-transparent shadow-sm' : 'bg-white text-surface-muted hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'}`}>Téléconsultation</button>
+                <button type="button" tabIndex={-1} onClick={() => setHasPrado(!hasPrado)} className={`shrink-0 px-2.5 py-1 text-xs font-bold rounded-full border border-brand-ice transition-all whitespace-nowrap ${hasPrado ? 'bg-brand-navy text-white border-transparent shadow-sm' : 'bg-white text-surface-muted hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'}`}>PRADO</button>
+                <button type="button" tabIndex={-1} onClick={() => setHasPdsa(!hasPdsa)} className={`shrink-0 px-2.5 py-1 text-xs font-bold rounded-full border border-brand-ice transition-all whitespace-nowrap ${hasPdsa ? 'bg-brand-navy text-white border-transparent shadow-sm' : 'bg-white text-surface-muted hover:border-brand-ice hover:bg-brand-ice/20 hover:text-brand-navy'}`}>PDSA</button>
               </div>
             )}
           </div>

@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
             <div className="bg-success-bg border border-success-main/20 text-success-main p-5 text-sm rounded-xl font-medium text-left">
               Si ce compte existe, un email contenant les instructions de réinitialisation vous a été envoyé.
             </div>
-            <Link href="/login" className="w-full qisana-btn block font-bold">
+            <Link href="/login" className="w-full qisana-btn flex items-center justify-center font-bold text-center">
               Retour à la connexion
             </Link>
           </div>

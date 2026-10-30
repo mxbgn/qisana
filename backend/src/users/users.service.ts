@@ -158,6 +158,8 @@ export class UsersService {
         radius: dto.radius ? +dto.radius : 10,
         hasFormationDeces: dto.hasFormationDeces,
         hasTeleconsultation: dto.hasTeleconsultation,
+        hasPrado: dto.hasPrado,
+        hasPdsa: dto.hasPdsa,
         address: dto.address,
         lat,
         lng,
@@ -295,7 +297,9 @@ export class UsersService {
             phone: true,
             radius: true,
             hasFormationDeces: true,
-            hasTeleconsultation: true
+            hasTeleconsultation: true,
+            hasPrado: true,
+            hasPdsa: true
           }
         }
       }

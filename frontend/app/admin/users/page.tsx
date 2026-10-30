@@ -345,6 +345,8 @@ export default function AdminUsersPage() {
                                   <p className="text-sm font-bold text-brand-navy truncate w-full block whitespace-nowrap">{user.profile?.cpts?.name || 'CPTS non renseignée'}</p>
                                   {user.profile?.hasFormationDeces && <p className="text-sm font-bold text-brand-navy whitespace-nowrap">Certificat Décès</p>}
                                   {user.profile?.hasTeleconsultation && <p className="text-sm font-bold text-brand-navy whitespace-nowrap">Téléconsultation</p>}
+                                  {user.profile?.hasPrado && <p className="text-sm font-bold text-brand-navy whitespace-nowrap">PRADO</p>}
+                                  {user.profile?.hasPdsa && <p className="text-sm font-bold text-brand-navy whitespace-nowrap">PDSA</p>}
                                 </div>
                                 <div className="flex flex-col space-y-1.5 min-w-0 max-w-full overflow-hidden">
                                   <p className="label-title">Localisation ({user.profile?.radius} km)</p>

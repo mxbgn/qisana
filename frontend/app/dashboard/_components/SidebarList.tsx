@@ -121,7 +121,7 @@ export default function SidebarList({
                     {pro.profile?.address}
                   </p>
 
-                  {(pro.profile?.hasFormationDeces || pro.profile?.hasTeleconsultation) && (
+                  {(pro.profile?.hasFormationDeces || pro.profile?.hasTeleconsultation || pro.profile?.hasPrado || pro.profile?.hasPdsa) && (
                     <div className="flex gap-1.5 flex-wrap mt-3">
                       {pro.profile?.hasFormationDeces && (
                         <span className="qisana-pill !py-1 !px-3 bg-brand-ice/30 text-brand-navy border-brand-ice">
@@ -131,6 +131,16 @@ export default function SidebarList({
                       {pro.profile?.hasTeleconsultation && (
                         <span className="qisana-pill !py-1 !px-3 bg-brand-ice/30 text-brand-navy border-brand-ice">
                           Téléconsultation
+                        </span>
+                      )}
+                      {pro.profile?.hasPrado && (
+                        <span className="qisana-pill !py-1 !px-3 bg-brand-ice/30 text-brand-navy border-brand-ice">
+                          PRADO
+                        </span>
+                      )}
+                      {pro.profile?.hasPdsa && (
+                        <span className="qisana-pill !py-1 !px-3 bg-brand-ice/30 text-brand-navy border-brand-ice">
+                          PDSA
                         </span>
                       )}
                     </div>

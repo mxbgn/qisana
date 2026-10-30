@@ -1,13 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../mail/mail.service';
+import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private mailService: MailService,
+    private prisma: PrismaService,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -39,5 +44,50 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+async forgotPassword(email: string) {
+    const user = await this.usersService.findOneByEmail(email);
+
+    if (user) {
+      const resetToken = crypto.randomBytes(32).toString('hex');
+      const resetTokenExpires = new Date(Date.now() + 3600000);
+
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { resetToken, resetTokenExpires },
+      });
+
+      await this.mailService.sendPasswordResetEmail(user.email, resetToken);
+    }
+
+    return { message: 'Si ce compte existe, un email contenant les instructions vous a été envoyé.' };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpires: { gte: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Le lien de réinitialisation est invalide ou expiré.');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpires: null,
+        isEmailVerified: true,
+      },
+    });
+
+    return { message: 'Mot de passe réinitialisé avec succès.' };
   }
 }

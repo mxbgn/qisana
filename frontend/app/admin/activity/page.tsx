@@ -33,7 +33,7 @@ export default function ActivityJournalPage() {
     return minutes === 0 ? `${seconds}s` : `${minutes}m ${seconds}s`;
   };
 
-  const renderFilters = (filters: any) => {
+const renderFilters = (filters: any) => {
     if (!filters) return <span className="text-xs text-slate-400 italic">Aucun filtre (Téléconsultation)</span>;
     
     const active = [];
@@ -41,6 +41,8 @@ export default function ActivityJournalPage() {
     if (filters.specialty === 'NURSE') active.push('Infirmier');
     if (filters.hasFormationDeces || filters.deathCertificate) active.push('Certificat de Décès');
     if (filters.hasTeleconsultation || filters.teleconsultation) active.push('Téléconsultation');
+    if (filters.hasPrado || filters.prado) active.push('PRADO');
+    if (filters.hasPdsa || filters.pdsa) active.push('PDSA');
     
     if (active.length === 0) return <span className="text-xs text-slate-400 italic">Aucun filtre (Téléconsultation)</span>;
     

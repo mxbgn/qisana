@@ -259,13 +259,12 @@ export class AuditLogsService {
 
       const uniqueProIds = [...new Set(relativeClicks.map(c => c.entityId))];
 
-      const activeFilters: string[] = [];
+const activeFilters: string[] = [];
       if (logDetails.filters?.specialty === 'DOCTOR') activeFilters.push('Médecin');
-      if (logDetails.filters?.hasFormationDeces) {
-        activeFilters.push('Certificat de Décès');
-      } else {
-        activeFilters.push('Téléconsultation');
-      }
+      if (logDetails.filters?.hasFormationDeces) activeFilters.push('Certificat de Décès');
+      if (logDetails.filters?.hasTeleconsultation) activeFilters.push('Téléconsultation');
+      if (logDetails.filters?.hasPrado) activeFilters.push('PRADO');
+      if (logDetails.filters?.hasPdsa) activeFilters.push('PDSA');
 
       const confirmedClick = relativeClicks.find(c => (c.details as any)?.status === 'CONFIRMED');
       let validatedProName = '—';

@@ -2,6 +2,7 @@ import { Controller, Post, Body, UnauthorizedException, Res } from '@nestjs/comm
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
@@ -30,5 +31,15 @@ constructor(private authService: AuthService) {}
     });
 
     return { user: jwtResponse.user, message: "Connexion réussie" };
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.email);
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() dto: { token: string; newPassword: string }) {
+    return this.authService.resetPassword(dto.token, dto.newPassword);
   }
 }

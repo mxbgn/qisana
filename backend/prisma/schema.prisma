@@ -30,6 +30,8 @@ model User {
   role             Role      // ADMIN, HEALTH_PRO, COORDINATOR
   isEmailVerified  Boolean   @default(false)
   verificationToken String?  @unique
+  resetToken         String?
+  resetTokenExpires  DateTime?
   deletedAt        DateTime?
   profile          Profile?
   createdAt        DateTime  @default(now())
@@ -61,6 +63,8 @@ model Profile {
   specialty           Specialty?
   hasFormationDeces   Boolean        @default(false)
   hasTeleconsultation Boolean        @default(false)
+  hasPrado            Boolean        @default(false)
+  hasPdsa             Boolean        @default(false)
   phone               String?
   address             String?
   lat                 Float?

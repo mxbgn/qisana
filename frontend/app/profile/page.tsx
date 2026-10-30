@@ -19,6 +19,8 @@ export default function ProfilePage() {
     cptsId: 'none',
     hasFormationDeces: false,
     hasTeleconsultation: false,
+    hasPrado: false,
+    hasPdsa: false,
     address: '', 
     radius: 30,
     isValidated: false
@@ -48,6 +50,8 @@ export default function ProfilePage() {
           cptsId: p?.cptsId || 'none',
           hasFormationDeces: p?.hasFormationDeces || false,
           hasTeleconsultation: p?.hasTeleconsultation || false,
+          hasPrado: p?.hasPrado || false,
+          hasPdsa: p?.hasPdsa || false,
           address: p?.address || '',
           radius: p?.radius || 30,
           isValidated: p?.isValidated || false
